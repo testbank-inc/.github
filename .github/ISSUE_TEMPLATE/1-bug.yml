@@ -1,0 +1,44 @@
+name: 버그 리포트
+description: 잘못 동작하는 것을 신고합니다
+title: "영역: 한 줄 요약"
+type: Bug
+labels: ["priority/medium"]
+body:
+  - type: textarea
+    id: background
+    attributes:
+      label: 배경
+      description: 증상과 발견 경위. 관련 CS/데이터/링크.
+      placeholder: 어떤 상황에서 무엇이 잘못 동작하나?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: 재현 절차 / 기대 vs 실제
+      placeholder: |
+        1. ...
+        2. ...
+        기대: ...
+        실제: ...
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: 환경
+      placeholder: "앱 3.5.4 (28) / iPadOS 26.1 / iPad Pro 11 M4"
+  - type: textarea
+    id: criteria
+    attributes:
+      label: 완료 조건
+      description: 에이전트가 "끝났다"를 판단하는 기준. 체크박스로.
+      placeholder: |
+        - [ ] ...
+    validations:
+      required: true
+  - type: textarea
+    id: refs
+    attributes:
+      label: 참고 / 검증
+      description: 관련 파일 경로, 이슈/PR, 검증 방법(테스트·실기기 여부).

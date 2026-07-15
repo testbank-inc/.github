@@ -1,0 +1,33 @@
+name: 작업 (Task)
+description: 리팩토링, 조사, 운영, 문서 등 일반 작업
+title: "영역: 한 줄 요약"
+type: Task
+labels: ["priority/medium"]
+body:
+  - type: textarea
+    id: background
+    attributes:
+      label: 배경
+      description: 왜 필요한가. 발견 경위, 관련 링크.
+    validations:
+      required: true
+  - type: textarea
+    id: work
+    attributes:
+      label: 작업 내용
+      description: 무엇을 할지. 알고 있는 접근 방법이 있으면 함께.
+    validations:
+      required: true
+  - type: textarea
+    id: criteria
+    attributes:
+      label: 완료 조건
+      placeholder: |
+        - [ ] ...
+    validations:
+      required: true
+  - type: textarea
+    id: refs
+    attributes:
+      label: 참고 / 검증
+      description: 관련 파일 경로, 이슈/PR, 검증 방법.

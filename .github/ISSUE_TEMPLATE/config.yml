@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 이슈 컨벤션 문서
+    url: https://github.com/testbank-inc/.github/blob/main/ISSUE_CONVENTIONS.md
+    about: 제목·본문 구조·라벨·에이전트 워크플로우 규칙

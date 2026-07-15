@@ -1,0 +1,33 @@
+name: 기능 제안 (Feature)
+description: 새 기능 또는 개선 제안
+title: "영역: 한 줄 요약"
+type: Feature
+labels: ["priority/medium"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 배경 (문제 / 기회)
+      description: 어떤 사용자 문제·기회인가. 근거 데이터/CS가 있으면 링크.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 제안
+      description: 어떻게 풀 것인가. 대안이 있으면 함께.
+    validations:
+      required: true
+  - type: textarea
+    id: criteria
+    attributes:
+      label: 완료 조건
+      placeholder: |
+        - [ ] ...
+    validations:
+      required: true
+  - type: textarea
+    id: refs
+    attributes:
+      label: 참고
+      description: 관련 파일 경로, 이슈/PR, 문서.
