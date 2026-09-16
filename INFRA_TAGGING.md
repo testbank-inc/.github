@@ -71,7 +71,9 @@ aws ec2 create-snapshot --region ap-northeast-2 \
 
 `log-class=audit`는 bastion 접속 기록, AWS CloudTrail, 로드 밸런서 액세스 로그, AWS WAF 로그, Amazon CloudFront 액세스 로그를 담는 버킷에 붙인다. 이 값을 붙인 버킷에는 다음 두 가지가 의무다.
 
-1. **삭제 방지 버킷 정책.** 버킷 정책으로 `s3:DeleteObject`·`s3:DeleteObjectVersion`을 거부해 적재된 로그가 지워지지 않게 한다.
+1. **삭제 방지 정책 편입.** IAM 관리형 정책 `isms-log-protection-deny`(현재 v2)의 보호 대상에 그 버킷이 들어가야 한다. 이 정책은 IAM 사용자 전원과 Role 25개에 부착되어 있고, `ProtectTrailBucket` 문의 `Resource`에 열거된 버킷에 대해 `s3:DeleteObject`·`s3:DeleteObjectVersion`·`s3:PutBucketPolicy` 등을 거부한다. 버킷 정책의 Deny는 요구하지 않는다(버킷 정책 Deny는 `testbank-isms-logs`의 `bastion/*` 접두사 한 곳뿐이며, 위 정책이 `s3:PutBucketPolicy`도 거부하므로 사람 주체는 보호 대상 버킷의 버킷 정책을 고칠 수 없다).
+
+   현재는 이 정책이 버킷을 이름으로 열거하므로, 새 `audit` 버킷을 만들면 정책의 새 버전에 그 버킷을 추가해야 한다. 태그 조건(`aws:ResourceTag/log-class`)으로 전환할 수 있는지는 검토 중이며, 전환되면 이 절을 갱신한다. 정책 버전 변경은 IAM 사용자 전원에게 부착된 정책을 바꾸는 일이므로 담당자 확인을 받고 수행한다.
 2. **365일 이상 보존.** 수명 주기 규칙의 만료 기간을 365일 미만으로 두지 않는다.
 
 버킷 생성 명령에는 태그 인자가 없다. 따라서 `create-bucket` 직후 같은 명령 줄에서 `put-bucket-tagging`을 이어 실행해, 태그가 빠진 버킷이 남지 않게 한다. 공통 필수 태그도 이때 함께 넣는다.
@@ -120,7 +122,8 @@ CloudFront 배포에 붙이는 웹 ACL은 `--scope CLOUDFRONT`이며 `--region u
 2. **사후 검사 — 일일 가드 Lambda `isms-resource-guard`.** 만들어진 경로와 무관하게 자원의 실제 상태를 매일 검사해 통보한다. 현재 버전(v1)은 탐지 전용이며 아래 다섯 가지만 검사한다.
    - 시크릿의 태그 5종 누락
    - 수동 스냅샷의 `expire-after` 태그 누락, 기한 경과, 미암호화
-   - `log-class=audit` 버킷에 삭제 방지 버킷 정책이 없는 경우
+   - `log-class=audit` 버킷이 `isms-log-protection-deny`의 보호 대상에 없는 경우
+   - 보호 대상에 있는데 `log-class=audit` 태그가 없는 경우
    - 이름이 로그 버킷 패턴(`*log*`, `aws-waf-logs-*`, `*-isms-logs*`, `*cloudtrail*`)인데 `log-class` 태그가 없는 경우
    - 로깅 구성이 없는 웹 ACL
 
